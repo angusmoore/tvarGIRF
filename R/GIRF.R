@@ -8,7 +8,7 @@
 #' a bootstrapped shock in place of the imposed shock (and then randomly bootstrapping shocks to simulate the TVAR as before). Since the TVAR is allowed
 #' to endogenously change regime, the shock series will differ between the two simulations - both because each is randomly selected, and because the two
 #' simulations will not necessarily have the same path for the regime. The difference between the two simulations is then saved as the response of
-#' each of the variables in the TVAR to the shock. 
+#' each of the variables in the TVAR to the shock.
 #'
 #' This process is repeated a number of times for each history, and for a number of histories and then averaged to construct the GIRF.
 #'
@@ -26,25 +26,25 @@
 #' @param restrict.to (integer) Do you want to restrict to a particular regime in the shock period (histories that lead to starting in any other regime will be ignored).
 #'
 #' @examples
-#' 
+#'
 #'
 #' @export
 GIRF <- function(tvar, shock, horizon = 20, H = 200, R = 500, restrict.to = NA) {
   data <- tvar$model[, 1:tvar$k]
-  
+
   # Split the residuals by regime
   resdis <- list()
   for (r in 1:tvar$model.specific$nreg) {
     resdis[[r]] <- tvar$residuals[r == tvar$model.specific$regime[(1+tvar$lag):length(tvar$model.specific$regime)], ]
   }
-  
+
   Y <- matrix(0, nrow = horizon, ncol = tvar$k)
-  
+
   pb <- progress::progress_bar$new(total = H)
-  
+
   for (h in 1:H) {
     pb$tick()
-    
+
     # Find a history
     got.regime <- FALSE
     while (!got.regime) {
@@ -56,7 +56,7 @@ GIRF <- function(tvar, shock, horizon = 20, H = 200, R = 500, restrict.to = NA) 
         got.regime <- TRUE
       }
     }
-    
+
     # Now repeatedly simulate with and without shock
     Y_shock <- matrix(0, nrow = horizon, ncol = tvar$k)
     Y_base <- matrix(0, nrow = horizon, ncol = tvar$k)
@@ -64,31 +64,31 @@ GIRF <- function(tvar, shock, horizon = 20, H = 200, R = 500, restrict.to = NA) 
       Y_shock <- Y_shock + GIRF.sim(tvar, as.matrix(history), horizon, shock, resdis)
       Y_base <- Y_base + GIRF.sim(tvar, as.matrix(history), horizon, NULL, resdis)
     }
-    
+
     # Add the results from the history to the accumulator
     Y <- Y + (1/R)*(Y_shock - Y_base)
   }
-  
+
   # Scale by number of histories
   Y <- (1/H)*Y
   colnames(Y) <- names(tvar$model)[1:tvar$k]
   return(as.data.frame(Y))
 }
 
-getregime <- function(tvar, data) {
-  threshval <- as.matrix(data) %*% tvar$model.specific$transCombin
-  r <- 1 + sum(threshval > tvar$model.specific$Thres)
+getregime <- function(tvar, input) {
+  threshval <- matrix(data = input, nrow = nrow(input), ncol = ncol(input)) %*% tvar$model.specific$transCombin
+  r <- 1 + sum(threshval[[1]] > tvar$model.specific$Thres)
   return(r)
 }
 
 GIRF.sim <- function(tvar, history, horizon, shock, resdis) {
-  r <- getregime(tvar, history[nrow(history) - tvar$thDelay + 1, ])
+  r <- getregime(tvar, history[nrow(history) - tvar$model.specific$thDelay + 1, ])
   if(is.null(shock)) {
     # no imposed shock, so bootstrap one
     s <- sample(nrow(resdis[[r]]), size=1)
     shock <- resdis[[r]][s, ]
   }
-  
+
   Y <- matrix(0, nrow = horizon, ncol = tvar$k)
   Y[1, ] <- sim.advance(tvar, history, shock)
   if (nrow(history) > 1) {
@@ -102,9 +102,9 @@ GIRF.sim <- function(tvar, history, horizon, shock, resdis) {
     # Sample a new shock
     s <- sample(nrow(resdis[[r]]), size=1)
     shock <- resdis[[r]][s, ]
-    
+
     shocklist <- rbind(shocklist, shock)
-    
+
     Y[t, ] <- sim.advance(tvar, history, shock)
     if (nrow(history) > 1) {
       history <- rbind(history[2:nrow(history), ], Y[t, ])
@@ -116,8 +116,8 @@ GIRF.sim <- function(tvar, history, horizon, shock, resdis) {
 }
 
 sim.advance <- function(tvar, history, v) {
-  return(tsDyn::TVAR.sim(B = tvar$coeffmat, 
-                  Thresh = tvar$model.specific$Thresh, 
+  return(tsDyn::TVAR.sim(B = tvar$coeffmat,
+                  Thresh = tvar$model.specific$Thresh,
                   nthres = tvar$model.specific$nthresh,
                   n = 1, lag = tvar$lag, include = tvar$include,
                   thDelay = tvar$model.specific$thDelay, mTh = which(tvar$model.specific$transCombin == 1),
