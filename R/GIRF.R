@@ -76,8 +76,11 @@ GIRF <- function(tvar, shock, horizon = 20, H = 200, R = 500, restrict.to = NA) 
 }
 
 getregime <- function(tvar, input) {
-  threshval <- matrix(data = input, nrow = nrow(input), ncol = ncol(input)) %*% tvar$model.specific$transCombin
-  r <- 1 + sum(threshval[[1]] > tvar$model.specific$Thres)
+  threshval <- 0
+  for (i in 1:ncol(input)) {
+    threshval <- threshval + input[1, i]*tvar$model.specific$transCombin[i]
+  }
+  r <- 1 + sum(threshval > tvar$model.specific$Thres)
   return(r)
 }
 
