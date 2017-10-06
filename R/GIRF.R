@@ -61,8 +61,8 @@ GIRF <- function(tvar, shock, horizon = 20, H = 200, R = 500, restrict.to = NA) 
     Y_shock <- matrix(0, nrow = horizon, ncol = tvar$k)
     Y_base <- matrix(0, nrow = horizon, ncol = tvar$k)
     for (i in 1:R) {
-      Y_shock <- Y_shock + GIRF.sim(tvar, as.matrix(history), horizon, shock, resdis)
-      Y_base <- Y_base + GIRF.sim(tvar, as.matrix(history), horizon, NULL, resdis)
+      Y_shock <- Y_shock + GIRF.sim(tvar, history, horizon, shock, resdis)
+      Y_base <- Y_base + GIRF.sim(tvar, history, horizon, NULL, resdis)
     }
 
     # Add the results from the history to the accumulator
@@ -85,7 +85,7 @@ getregime <- function(tvar, input) {
 }
 
 GIRF.sim <- function(tvar, history, horizon, shock, resdis) {
-  r <- getregime(tvar, history[nrow(history) - tvar$model.specific$thDelay + 1, ])
+  r <- getregime(tvar, history[nrow(history) - tvar$model.specific$thDelay + 1, , drop = FALSE])
   if(is.null(shock)) {
     # no imposed shock, so bootstrap one
     s <- sample(nrow(resdis[[r]]), size=1)
@@ -101,7 +101,7 @@ GIRF.sim <- function(tvar, history, horizon, shock, resdis) {
   }
   shocklist <- shock
   for (t in 2:horizon) {
-    r <- getregime(tvar, history[nrow(history) - tvar$thDelay + 1, ])
+    r <- getregime(tvar, history[nrow(history) - tvar$model.specific$thDelay + 1, , drop = FALSE])
     # Sample a new shock
     s <- sample(nrow(resdis[[r]]), size=1)
     shock <- resdis[[r]][s, ]
