@@ -29,7 +29,7 @@ exampleTVAR <- TVAR(zeroyld, lag=2, nthresh=1, thDelay=1, mTh=1, plot=FALSE)
 girfs <- GIRF(exampleTVAR, c(0,1))
 ```
 
-The result, contains the generalised impulse responses for each variable in the TVAR to the supplied shock.
+The result contains the generalised impulse responses for each variable in the TVAR to the supplied shock. (NB: Since we have not identified shocks, these GIRFs are not very meaningful; this example is designed only to illustrate how to use the library.)
 
 # Package documentation
 
