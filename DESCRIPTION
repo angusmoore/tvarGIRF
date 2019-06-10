@@ -6,7 +6,7 @@ Authors@R:
     c(person(given = "Angus",
              family = "Moore",
              role = c("aut", "cre"),
-             email = "angusmoore9@gmail.com")
+             email = "angusmoore9@gmail.com"))
 Description: Calculate generalised impulse response functions for threshold vector autoregressions estimated using the R tsDyn package.
 License: MIT + file LICENSE
 Imports:
@@ -15,7 +15,7 @@ Imports:
 Suggests:
     testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
     covr,
     pkgdown
 Encoding: UTF-8
