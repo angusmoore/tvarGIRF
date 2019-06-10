@@ -26,7 +26,12 @@
 #' @param restrict.to (integer) Do you want to restrict to a particular regime in the shock period (histories that lead to starting in any other regime will be ignored).
 #'
 #' @examples
-#'
+#' \dontrun{
+#' library(tsDyn)
+#'   data(zeroyld)
+#'   exampleTVAR <- TVAR(zeroyld, lag=2, nthresh=1, thDelay=1, mTh=1, plot=FALSE)
+#'   girfs <- GIRF(exampleTVAR, c(0,1))
+#' }
 #'
 #' @export
 GIRF <- function(tvar, shock, horizon = 20, H = 200, R = 500, restrict.to = NA) {

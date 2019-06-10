@@ -40,6 +40,11 @@ carlo simulation periods.
 Creates a (potentially multipanel) time series graph from a ts objecct. Supports bar and line (and combinations of).
 }
 \examples{
-
+\dontrun{
+library(tsDyn)
+  data(zeroyld)
+  exampleTVAR <- TVAR(zeroyld, lag=2, nthresh=1, thDelay=1, mTh=1, plot=FALSE)
+  girfs <- GIRF(exampleTVAR, c(0,1))
+}
 
 }
