@@ -14,9 +14,14 @@ URL: https://angusmoore.github.io/tvarGIRF/,
 BugReports: https://github.com/angusmoore/tvarGIRF/issues
 Imports:
     tsDyn,
-    progress
+    progress,
+    ggplot2,
+    generics,
+    tibble,
+    tidyr,
+    crayon
 Suggests:
-    testthat,
+    testthat (>= 2.1.0),
     knitr,
     rmarkdown,
     covr,

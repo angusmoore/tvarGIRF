@@ -80,7 +80,15 @@ GIRF <- function(tvar, shock, horizon = 20, H = 200, R = 500, restrict.to = NA) 
   # Scale by number of histories
   Y <- (1/H)*Y
   colnames(Y) <- names(tvar$model)[1:tvar$k]
-  return(as.data.frame(Y))
+  Y <- tibble::as_tibble(Y)
+  return(structure(list(
+    responses = Y,
+    H = H,
+    R = R,
+    shock = shock,
+    tvar_name = deparse(substitute(tvar))
+  ),
+  class = "tvarGIRF"))
 }
 
 getregime <- function(tvar, input) {
