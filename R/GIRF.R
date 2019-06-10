@@ -30,6 +30,9 @@
 #'
 #' @export
 GIRF <- function(tvar, shock, horizon = 20, H = 200, R = 500, restrict.to = NA) {
+  if (length(shock) != tvar$k) {
+    stop(paste0("Your shock vector has the wrong length. Should be length ", tvar$k, " (the number of variables in your TVAR), but you passed in ", length(shock)))
+  }
   data <- tvar$model[, 1:tvar$k]
 
   # Split the residuals by regime
@@ -51,7 +54,7 @@ GIRF <- function(tvar, shock, horizon = 20, H = 200, R = 500, restrict.to = NA) 
       start <- sample(tvar$t + 1,1)
       history <- data[start:(start+tvar$lag-1), ] # lower case omega t-1 in KPP notation
       r <- tvar$model.specific$regime[start + tvar$lag]
-      r <- getregime(tvar, history[tvar$model.specific$thDelay, ])
+      r <- getregime(tvar, history[tvar$model.specific$thDelay, , drop = FALSE])
       if (is.na(restrict.to) || r == restrict.to) {
         got.regime <- TRUE
       }
@@ -95,7 +98,7 @@ GIRF.sim <- function(tvar, history, horizon, shock, resdis) {
   Y <- matrix(0, nrow = horizon, ncol = tvar$k)
   Y[1, ] <- sim.advance(tvar, history, shock)
   if (nrow(history) > 1) {
-    history <- rbind(history[1:(nrow(history)-1), ], Y[1, ])
+    history <- rbind(history[1:(nrow(history)-1), , drop = FALSE], Y[1, ])
   } else {
     history <- matrix(Y[1, ], nrow = 1, ncol = tvar$k)
   }
@@ -110,7 +113,7 @@ GIRF.sim <- function(tvar, history, horizon, shock, resdis) {
 
     Y[t, ] <- sim.advance(tvar, history, shock)
     if (nrow(history) > 1) {
-      history <- rbind(history[2:nrow(history), ], Y[t, ])
+      history <- rbind(history[2:nrow(history), , drop = FALSE], Y[t, ])
     } else {
       history <- matrix(Y[t, ], nrow = 1, ncol = tvar$k)
     }
