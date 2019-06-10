@@ -33,4 +33,4 @@ The result contains the generalised impulse responses for each variable in the T
 
 # Package documentation
 
-Documentation for this package can be found [here](https://angusmoore.github.io/tvarGIRF/tvarGIRF.pdf).
+Documentation for this package can be found [here](https://angusmoore.github.io/tvarGIRF/).

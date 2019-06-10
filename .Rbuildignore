@@ -2,3 +2,6 @@
 ^\.Rproj\.user$
 .travis.yml
 .push_gh_pages.sh
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
