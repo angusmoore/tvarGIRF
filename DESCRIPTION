@@ -1,9 +1,12 @@
 Package: tvarGIRF
 Type: Package
 Title: GIRFs for threshold vars from the R tsDyn package
-Version: 0.0.1
-Author: Angus Moore
-Maintainer: Angus Moore <yourself@somewhere.net>
+Version: 0.1.0.9000
+Authors@R: 
+    c(person(given = "Angus",
+             family = "Moore",
+             role = c("aut", "cre"),
+             email = "angusmoore9@gmail.com")
 Description: Calculate generalised impulse response functions for threshold vector autoregressions estimated using the R tsDyn package.
 License: MIT + file LICENSE
 Imports:
@@ -13,6 +16,8 @@ Suggests:
     testthat,
     knitr,
     rmarkdown
+    covr,
+    pkgdown
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
