@@ -12,5 +12,5 @@ test_that("Printing, summary and plot smoke tests", {
 
 test_that("tidier for GIRF", {
   expect_named(tidy(g), c("horizon", "variable", "response"))
-  expect_s3_class(g, "tibble")
+  expect_true(tibble::is_tibble(tidy(g)))
 })
