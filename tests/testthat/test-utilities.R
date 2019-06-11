@@ -6,7 +6,6 @@ g <- GIRF(tv, c(0,1), horizon = 10, R = 2, H = 2)
 
 test_that("Printing, summary and plot smoke tests", {
   expect_error(print(g), NA)
-  expect_error(View(g), NA)
   expect_error(summary(g), NA)
   expect_error(plot(g), NA)
 })

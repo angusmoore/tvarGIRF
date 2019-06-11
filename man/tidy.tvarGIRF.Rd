@@ -4,7 +4,7 @@
 \alias{tidy.tvarGIRF}
 \title{Convert GIRF responses to tidy form}
 \usage{
-tidy.tvarGIRF(x, ...)
+\method{tidy}{tvarGIRF}(x, ...)
 }
 \arguments{
 \item{x}{GIRFs returned by a call to `GIRF`}
