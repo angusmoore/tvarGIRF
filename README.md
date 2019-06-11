@@ -1,14 +1,28 @@
+# tvarGIRF
+
+<!-- badges: start -->
+
 [![Travis-CI Build Status](https://travis-ci.org/angusmoore/tvarGIRF.svg?branch=master)](https://travis-ci.org/angusmoore/tvarGIRF)
 [![Coverage Status](https://coveralls.io/repos/github/angusmoore/tvarGIRF/badge.svg?branch=master)](https://coveralls.io/github/angusmoore/tvarGIRF?branch=master)
+[![Lifecycle:
+maturing](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+<!-- badges: end -->
 
-# tvarGIRF
 `tvarGIRF` is an `R` package that calculates generalised impulse response functions to reduced form shocks for threshold vector autoregressions estimated using the `tsDyn` package.
+
+**Please note**: this package is something I put together quickly for an uncompleted project because the only other implementation of GIRFs in R [that existed at the time](http://groups.google.com/group/tsdyn/t/5c517a94a3a3ab0c) looks like it implements the bootstrap incorrectly to me. According to the `tsDyn` [wiki](https://github.com/MatthieuStigler/tsDyn/wiki/FAQ#1-are-generalized-impulse-functions-girf-available-in-tsdyn), GIRFs are now included in the `tsDyn` package, so you might have better luck with those.
 
 ## Installation
 
-Install the package using the R `devtools` package:
+Install the lastest released version of the package using the R `remotes` package:
 ```
-library(devtools)
+library(remotes)
+install_github("angusmoore/tvarGIRF", ref = "v0.1.0")
+```
+
+You can also install the latest development version:
+```
+library(remotes)
 install_github("angusmoore/tvarGIRF")
 ```
 
