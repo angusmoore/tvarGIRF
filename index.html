@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tvarGIRF</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -65,16 +65,21 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-
 <div id="tvargirf" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#tvargirf" class="anchor"></a>tvarGIRF</h1></div>
+<!-- badges: start -->
+
 <p><code>tvarGIRF</code> is an <code>R</code> package that calculates generalised impulse response functions to reduced form shocks for threshold vector autoregressions estimated using the <code>tsDyn</code> package.</p>
+<p><strong>Please note</strong>: this package is something I put together quickly for an uncompleted project because the only other implementation of GIRFs in R <a href="http://groups.google.com/group/tsdyn/t/5c517a94a3a3ab0c">that existed at the time</a> looks like it implements the bootstrap incorrectly to me. According to the <code>tsDyn</code> <a href="https://github.com/MatthieuStigler/tsDyn/wiki/FAQ#1-are-generalized-impulse-functions-girf-available-in-tsdyn">wiki</a>, GIRFs are now included in the <code>tsDyn</code> package, so you might have better luck with those.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>Install the package using the R <code>devtools</code> package:</p>
-<pre><code><a href="https://www.rdocumentation.org/packages/base/topics/library">library(devtools)
+<p>Install the lastest released version of the package using the R <code>remotes</code> package:</p>
+<pre><code><a href="https://www.rdocumentation.org/packages/base/topics/library">library(remotes)
+install_github("angusmoore/tvarGIRF", ref = "v0.1.0")</a></code></pre>
+<p>You can also install the latest development version:</p>
+<pre><code><a href="https://www.rdocumentation.org/packages/base/topics/library">library(remotes)
 install_github("angusmoore/tvarGIRF")</a></code></pre>
 </div>
 <div id="usage" class="section level2">
@@ -132,6 +137,7 @@ girfs &lt;- GIRF(exampleTVAR, c(0,1))</a></code></pre>
 <ul class="list-unstyled">
 <li><a href="https://travis-ci.org/angusmoore/tvarGIRF"><img src="https://travis-ci.org/angusmoore/tvarGIRF.svg?branch=master" alt="Travis-CI Build Status"></a></li>
 <li><a href="https://coveralls.io/github/angusmoore/tvarGIRF?branch=master"><img src="https://coveralls.io/repos/github/angusmoore/tvarGIRF/badge.svg?branch=master" alt="Coverage Status"></a></li>
+<li><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: maturing"></a></li>
 </ul>
 </div>
 </div>
