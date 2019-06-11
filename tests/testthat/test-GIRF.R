@@ -4,10 +4,10 @@ set.seed(42)
 
 test_that("Known output tests", {
   tv <- TVAR(zeroyld, lag=2, nthresh=1, thDelay=1, trim=0.1, mTh=1, plot=FALSE)
-  expect_known_hash(GIRF(tv, c(0,1), horizon = 10, R = 2, H = 2), "bb3f")
+  expect_known_hash(GIRF(tv, c(0,1), horizon = 10, R = 2, H = 2)$responses, "fd18")
 
   tv <- TVAR(zeroyld, lag=2, nthresh=2, thDelay=1, trim=0.1, mTh=1, plot=FALSE)
-  expect_known_hash(GIRF(tv, c(0,1), horizon = 10, R = 2, H = 2), "5937")
+  expect_known_hash(GIRF(tv, c(0,1), horizon = 10, R = 2, H = 2)$responses, "c43d")
 })
 
 
