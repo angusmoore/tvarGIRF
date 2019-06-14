@@ -79,7 +79,7 @@ GIRF <- function(tvar, shock, horizon = 20, H = 200, R = 500, restrict.to = NA) 
 
   # Scale by number of histories
   Y <- (1/H)*Y
-  colnames(Y) <- names(tvar$model)[1:tvar$k]
+  colnames(Y) <- colnames(tvar$model)[1:tvar$k]
   Y <- tibble::as_tibble(Y)
   return(structure(list(
     responses = Y,
