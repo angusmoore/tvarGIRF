@@ -17,7 +17,7 @@ maturing](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https
 Install the lastest released version of the package using the R `remotes` package:
 ```
 library(remotes)
-install_github("angusmoore/tvarGIRF", ref = "v0.1.1")
+install_github("angusmoore/tvarGIRF", ref = "v0.1.2")
 ```
 
 You can also install the latest development version:
