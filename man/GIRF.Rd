@@ -17,7 +17,7 @@ GIRF(tvar, shock, horizon = 20, H = 200, R = 500, restrict.to = NA)
 
 \item{R}{(default 500) How many times to replicate the forward simulation for each history.}
 
-\item{restrict.to}{(integer) Do you want to restrict to a particular regime in the shock period (histories that lead to starting in any other regime will be ignored).}
+\item{restrict.to}{(integer) Do you want to restrict to a particular regime in the shock period (histories that lead to starting in any other regime will be ignored). Should be a single integer, corresponding to the regime number in your estimated TVAR (e.g. should be an integer in 1:(1+nthresh)). Regime numbers correspond to the order the regimes are listed when you print() your estimated TVAR.}
 }
 \description{
 This function constructs GIRFs for an threshold VAR (from the tsDyn package) using variation of the method from Koop, Pesaran and Potter (1996).
@@ -36,15 +36,17 @@ This process is repeated a number of times for each history, and for a number of
 Importantly, the supplied shock (and the shocks that are sampled) are reduced form. This means you are responsible for supplying a sensibly identifited
 initial shock. But after that, by using reduced form shocks, there is no need to take a stand about identifying structural shocks for all of the monte
 carlo simulation periods.
-
-Creates a (potentially multipanel) time series graph from a ts objecct. Supports bar and line (and combinations of).
 }
 \examples{
 \dontrun{
 library(tsDyn)
-  data(zeroyld)
-  exampleTVAR <- TVAR(zeroyld, lag=2, nthresh=1, thDelay=1, mTh=1, plot=FALSE)
-  girfs <- GIRF(exampleTVAR, c(0,1))
+data(zeroyld)
+exampleTVAR <- TVAR(zeroyld, lag=2, nthresh=1, thDelay=1, mTh=1, plot=FALSE)
+girfs <- GIRF(exampleTVAR, c(0,1))
+
+# Show GIRF conditional on the shock occurring in the `Bdown` regime (see the
+# regimes by running print(exampleTVAR))
+conditional_girf_bdown <- GIRF(exampleTVAR, c(0,1), restrict.to = 1)
 }
 
 }
