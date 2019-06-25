@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tvarGIRF</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
       </span>
     </div>
 
@@ -74,6 +74,9 @@
     <span class="fa fa-home fa-lg"></span>
      
   </a>
+</li>
+<li>
+  <a href="../articles/tvarGIRF.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -137,7 +140,7 @@
     </tr>
     <tr>
       <th>restrict.to</th>
-      <td><p>(integer) Do you want to restrict to a particular regime in the shock period (histories that lead to starting in any other regime will be ignored).</p></td>
+      <td><p>(integer) Do you want to restrict to a particular regime in the shock period (histories that lead to starting in any other regime will be ignored). Should be a single integer, corresponding to the regime number in your estimated TVAR (e.g. should be an integer in 1:(1+nthresh)). Regime numbers correspond to the order the regimes are listed when you print() your estimated TVAR.</p></td>
     </tr>
     </table>
     
@@ -154,15 +157,18 @@ each of the variables in the TVAR to the shock.</p>
 <p>Importantly, the supplied shock (and the shocks that are sampled) are reduced form. This means you are responsible for supplying a sensibly identifited
 initial shock. But after that, by using reduced form shocks, there is no need to take a stand about identifying structural shocks for all of the monte
 carlo simulation periods.</p>
-<p>Creates a (potentially multipanel) time series graph from a ts objecct. Supports bar and line (and combinations of).</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>tsDyn</span>)
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>zeroyld</span>)
-  <span class='no'>exampleTVAR</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/tsDyn/topics/TVAR'>TVAR</a></span>(<span class='no'>zeroyld</span>, <span class='kw'>lag</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>nthresh</span><span class='kw'>=</span><span class='fl'>1</span>, <span class='kw'>thDelay</span><span class='kw'>=</span><span class='fl'>1</span>, <span class='kw'>mTh</span><span class='kw'>=</span><span class='fl'>1</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
-  <span class='no'>girfs</span> <span class='kw'>&lt;-</span> <span class='fu'>GIRF</span>(<span class='no'>exampleTVAR</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>1</span>))
+<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>zeroyld</span>)
+<span class='no'>exampleTVAR</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/tsDyn/topics/TVAR'>TVAR</a></span>(<span class='no'>zeroyld</span>, <span class='kw'>lag</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>nthresh</span><span class='kw'>=</span><span class='fl'>1</span>, <span class='kw'>thDelay</span><span class='kw'>=</span><span class='fl'>1</span>, <span class='kw'>mTh</span><span class='kw'>=</span><span class='fl'>1</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
+<span class='no'>girfs</span> <span class='kw'>&lt;-</span> <span class='fu'>GIRF</span>(<span class='no'>exampleTVAR</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>1</span>))
+
+<span class='co'># Show GIRF conditional on the shock occurring in the `Bdown` regime (see the</span>
+<span class='co'># regimes by running print(exampleTVAR))</span>
+<span class='no'>conditional_girf_bdown</span> <span class='kw'>&lt;-</span> <span class='fu'>GIRF</span>(<span class='no'>exampleTVAR</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>1</span>), <span class='kw'>restrict.to</span> <span class='kw'>=</span> <span class='fl'>1</span>)
 <span class='co'># }</span><div class='input'>
 </div></pre>
   </div>
