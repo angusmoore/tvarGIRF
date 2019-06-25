@@ -1,0 +1,179 @@
+---
+title: "tvarGIRF"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{tvarGIRF}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+`tvarGIRF` is an `R` package that calculates generalised impulse response functions to reduced form shocks for threshold vector autoregressions estimated using the `tsDyn` package.
+
+**Please note**: this package is something I put together quickly for an uncompleted project because the only other implementation of GIRFs in R [that existed at the time](http://groups.google.com/group/tsdyn/t/5c517a94a3a3ab0c) looks like it implements the bootstrap incorrectly to me. According to the `tsDyn` [wiki](https://github.com/MatthieuStigler/tsDyn/wiki/FAQ#1-are-generalized-impulse-functions-girf-available-in-tsdyn), GIRFs are now included in the `tsDyn` package, so you might have better luck with those.
+
+## Installation
+
+Install the lastest released version of the package using the R `remotes` package:
+```{r eval = FALSE}
+library(remotes)
+install_github("angusmoore/tvarGIRF", ref = "v0.1.2")
+```
+
+You can also install the latest development version:
+```{r eval = FALSE}
+library(remotes)
+install_github("angusmoore/tvarGIRF")
+```
+
+## Basic usage
+
+The library extends the R `tsDyn` package. The following example illustrates how
+to create a simple GIRF for a threshold VAR using the `zeroyld` dataset provided
+with the `tsDyn` package.
+
+`GIRF` is given a reduced form shock - in the example below a shock to only the
+second variable `c(0,1)`. It is up to you to identify shocks;
+`tvarGIRF` won't do it for you.
+
+```{r warning=FALSE}
+library(tsDyn)
+library(tvarGIRF)
+
+# Estimate an example TVAR using the zeroyld dataset included in the tsDyn package
+data(zeroyld)
+exampleTVAR <- TVAR(zeroyld, lag=2, nthresh=1, thDelay=1, mTh=1, plot=FALSE)
+
+# Calculate GIRFs for a reduced form shock to the second variable (long.run)
+GIRF(exampleTVAR, c(0,1), H = 10, R = 10)
+```
+
+NB: These GIRFs are meaningless as I have used very few repetitions to 
+calculate them. I have done this so that the examples don't take too long to run.
+But you should use _much_ larger values for your actual estimation.
+
+### Shocks to more than one variable
+
+Note that you can shock more than one variable. If you had a three equation TVAR,
+passing `shock = c(1,0,0)` would give you the GIRF to a reduced-form shock to the
+first equation, and `shock = c(1,1,0)` would be a reduced form shock to both the
+first and second. The values need not be 1 either. You can estimate the response
+to a 0.9 unit shock to one variable and a 0.645 to the other (just as an example!):
+```{r}
+GIRF(exampleTVAR, c(0.9, 0.645), H = 10, R = 10)
+```
+This is helpful, as you will typically want to identify _structural_ shocks. The
+reduced form shock will be some linear combination of those structural shocks. See
+the section "A note on shocks" for a bit more discussion.
+
+### Viewing the results
+
+`tvarGIRF` has a couple helpful functions to help you view the results from `GIRF`.
+
+The first is to simply print the results of an estimation:
+```{r}
+saved_girfs <- GIRF(exampleTVAR, c(0,1), H = 10, R = 10)
+saved_girfs # or, equivalently print(saved_girfs)
+```
+
+There is also a tidier for GIRFs (a la [`broom`](https://cran.r-project.org/web/packages/broom/vignettes/broom.html)):
+```{r}
+tidy(saved_girfs)
+```
+
+You can `View` GIRFs in the spreadsheet viewer. You can also plot your GIRFs, using
+a built in `plot` function that uses `ggplot2`:
+```{r}
+plot(saved_girfs)
+```
+
+(Again, these GIRFs are meaningless as I have used very few repetitions to 
+calculate them, which is why they look so wonky. I have done this so that the
+examples don't take too long to run. But you should use _much_ larger values for
+your actual estimation.)
+
+## A note on shocks
+
+`tvarGIRF` **does not identify shocks for you**. The argument you supply to tvarGIRF
+is for a reduced form shock. This is rarely what you want. The reduced form shocks
+are extremely unlikely to be uncorrelated with one another, and so it makes little
+sense to consider one such isolated shock.
+
+Instead, you will want to identify _structural_ shocks that _are_ uncorrelated
+with one another.
+
+If you want to use structural shocks, you will have to identify the shocks yourself
+and supply the reduced form shock that corresponds to your chosen structural shock.
+**It is up to you to identify shocks; `tvarGIRF` won't do it for you.** There are
+many strategies for identifying structural shocks, `tvarGIRf` can't help with this.
+
+As an example, let's identify a structural shock for the TVAR we estimated above
+using timing restrictions / Cholesky decomposition. Our timing assumption is that
+shocks to `short.run` affect both variables contemparenously, but shocks to
+`long.run` affect `short.run` with a one period lag.^[This is not a very sensible
+assumption in this context and is meant purely to illustrate how you might go
+about this identification strategy using `tvarGIRF`. There are many problems
+with the identification strategy I use here, including that I assume that the
+impact of the structural shocks is the same in both regimes.]
+
+Using our estimated TVAR, we can get the residuals by:
+```{r}
+e <- resid(exampleTVAR)
+```
+
+We calculate the covariance matrix by:
+```{r}
+cov_matrix <- t(e) %*% e
+print(cov_matrix)
+```
+And take an upper triangular Cholesky decomposition:
+```{r}
+chol(cov_matrix)
+```
+I could then calculate the GIRF to the identified structural shock to the variable
+`short.run` by running:
+```{r}
+structural_girfs <- GIRF(exampleTVAR, c(6.535195, 8.393587), H = 10, R = 10)
+```
+Which is what my identification scheme tells me the structural shock looks like
+as a reduced form shock (the first row of the cholesky-decomposed covariance matrix).
+
+## GIRFs conditional on starting in a particular regime
+
+The `restrict.to` argument takes an integer corresponding to which regime you wish
+to restrict the GIRF to. For instance, using the toy example we started with before,
+if I estimate the following TVAR:
+```{r}
+data(zeroyld)
+exampleTVAR <- TVAR(zeroyld, lag = 2, nthresh = 1, thDelay = 1, mTh = 1, plot = FALSE)
+```
+I have a TVAR with _two_ regimes. These are regimes are denoted by `1` when then
+threshold variable (in this case `short.run`) is below my estimated threshold
+(`10.653` in this example) and denoted by `2` when it is above the threshold value.
+This scales to more regimes: `1` corresponds to the lowest regime and `nthresh+1`
+to the highest regime.
+
+You can see the names of your regimes by `print`ing your TVAR:
+```{r}
+exampleTVAR
+```
+My regimes are called `Bdown` (the regime denoted by 1, as it appears first) and
+`Bup` (the regime denoted by 2, as it appears second).
+
+You can also see which regime your estimated model is in at each point in your
+estimation sample by looking at:
+```{r}
+regime(exampleTVAR)
+```
+And you could confirm that these correspond to `short.run` being above or below
+the estimated threshold value.
+
+The `restrict.to` argument in tvarGIRF uses those regime numbers. Suppose I want to
+examine GIRFs conditional on starting in regime `Bdown`, when `short.run` is below
+my threshold. This corresponds to regime `1`. So I would use `restrict.to = 1` in
+my call to GIRF:
+```{r}
+GIRF(exampleTVAR, c(0,1), H = 10, R = 10, restrict.to = 1)
+```
+
+(NB: Again, I am using far too few repetitions to calculate meaningful GIRFs, but
+I don't want the examples to take too long.)

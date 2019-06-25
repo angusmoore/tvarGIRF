@@ -16,27 +16,29 @@
 #' initial shock. But after that, by using reduced form shocks, there is no need to take a stand about identifying structural shocks for all of the monte
 #' carlo simulation periods.
 #'
-#' Creates a (potentially multipanel) time series graph from a ts objecct. Supports bar and line (and combinations of).
-#'
 #' @param tvar An estimated tvar (from the tsDyn package) for which you wish to calculate a GIRF.
 #' @param shock A column specifying which (reduced form) shock you wish to impose.
 #' @param horizon (default 20) How many periods to simulate after the shock?
 #' @param H (default 200) How many histories to sample.
 #' @param R (default 500) How many times to replicate the forward simulation for each history.
-#' @param restrict.to (integer) Do you want to restrict to a particular regime in the shock period (histories that lead to starting in any other regime will be ignored).
+#' @param restrict.to (integer) Do you want to restrict to a particular regime in the shock period (histories that lead to starting in any other regime will be ignored). Should be a single integer, corresponding to the regime number in your estimated TVAR (e.g. should be an integer in 1:(1+nthresh)). Regime numbers correspond to the order the regimes are listed when you print() your estimated TVAR.
 #'
 #' @examples
 #' \dontrun{
 #' library(tsDyn)
-#'   data(zeroyld)
-#'   exampleTVAR <- TVAR(zeroyld, lag=2, nthresh=1, thDelay=1, mTh=1, plot=FALSE)
-#'   girfs <- GIRF(exampleTVAR, c(0,1))
+#' data(zeroyld)
+#' exampleTVAR <- TVAR(zeroyld, lag=2, nthresh=1, thDelay=1, mTh=1, plot=FALSE)
+#' girfs <- GIRF(exampleTVAR, c(0,1))
+#'
+#' # Show GIRF conditional on the shock occurring in the `Bdown` regime (see the
+#' # regimes by running print(exampleTVAR))
+#' conditional_girf_bdown <- GIRF(exampleTVAR, c(0,1), restrict.to = 1)
 #' }
 #'
 #' @export
 GIRF <- function(tvar, shock, horizon = 20, H = 200, R = 500, restrict.to = NA) {
   if (length(shock) != tvar$k) {
-    stop(paste0("Your shock vector has the wrong length. Should be length ", tvar$k, " (the number of variables in your TVAR), but you passed in ", length(shock)))
+    stop(paste0("Your shock vector has the wrong length. Should be length ", tvar$k, " (the number of variables in your TVAR), but you passed in a ", class(shock), " with length ", length(shock)))
   }
   data <- tvar$model[, 1:tvar$k]
 
