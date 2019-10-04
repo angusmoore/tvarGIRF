@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GIRFs for threshold vars from the R tsDyn package • tvarGIRF</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="GIRFs for threshold vars from the R tsDyn package">
 <meta property="og:description" content="Calculate generalised impulse response functions for threshold vector autoregressions estimated using the R tsDyn package.">
 <meta name="twitter:card" content="summary">
@@ -30,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tvarGIRF</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4</span>
       </span>
     </div>
 
@@ -38,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -52,7 +53,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/angusmoore/tvarGIRF">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -65,6 +66,7 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="contents col-md-9">
 
@@ -79,18 +81,18 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>Install the lastest released version of the package using the R <code>remotes</code> package:</p>
-<pre><code><a href="https://www.rdocumentation.org/packages/base/topics/library">library(remotes)
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(remotes)
 install_github("angusmoore/tvarGIRF", ref = "v0.1.1")</a></code></pre>
 <p>You can also install the latest development version:</p>
-<pre><code><a href="https://www.rdocumentation.org/packages/base/topics/library">library(remotes)
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(remotes)
 install_github("angusmoore/tvarGIRF")</a></code></pre>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
 <p>The library extends the R <code>tsDyn</code> package. The following example illustrates how to create a simple GIRF for a threshold VAR using the <code>zeroyld</code> dataset provided with the <code>tsDyn</code> package.</p>
-<p><code>GIRF</code> is given a reduced form shock - in the example below a shock to only the second variable <code><a href="https://www.rdocumentation.org/packages/base/topics/c">c(0,1)</a></code>. If you want to use orthoganlised shocks, you should calculate the orthogonalisation yourself and supply the reduced form shock that corresponds to your chosen structural shock. It is up to you to identify shocks; <code>tvarGIRF</code> won’t do it for you.</p>
-<pre><code><a href="https://www.rdocumentation.org/packages/base/topics/library">library(tsDyn)
+<p><code>GIRF</code> is given a reduced form shock - in the example below a shock to only the second variable <code><a href="https://rdrr.io/r/base/c.html">c(0,1)</a></code>. If you want to use orthoganlised shocks, you should calculate the orthogonalisation yourself and supply the reduced form shock that corresponds to your chosen structural shock. It is up to you to identify shocks; <code>tvarGIRF</code> won’t do it for you.</p>
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(tsDyn)
 library(tvarGIRF)
 
 # Estimate an example TVAR using the zeroyld dataset included in the tsDyn package
@@ -146,17 +148,20 @@ girfs &lt;- GIRF(exampleTVAR, c(0,1))</a></code></pre>
 </div>
 </div>
 
+
       <footer><div class="copyright">
   <p>Developed by Angus Moore.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>
