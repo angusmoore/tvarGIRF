@@ -1,7 +1,7 @@
 Package: tvarGIRF
 Type: Package
 Title: GIRFs for threshold vars from the R tsDyn package
-Version: 0.1.4.9000
+Version: 0.1.4
 Authors@R: 
     c(person(given = "Angus",
              family = "Moore",
