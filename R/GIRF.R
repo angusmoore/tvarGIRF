@@ -40,6 +40,12 @@ GIRF <- function(tvar, shock, horizon = 20, H = 200, R = 500, restrict.to = NA) 
   if (length(shock) != tvar$k) {
     stop(paste0("Your shock vector has the wrong length. Should be length ", tvar$k, " (the number of variables in your TVAR), but you passed in a ", class(shock), " with length ", length(shock)))
   }
+
+  if (length(tvar$model.specific$transCombin) == 0) {
+    stop("Simulations of models with external transition variables (argument thVar in TVAR) not supported",
+         call. = FALSE)
+  }
+
   data <- tvar$model[, 1:tvar$k]
 
   # Split the residuals by regime
